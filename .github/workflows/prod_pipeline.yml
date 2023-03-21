@@ -1,0 +1,42 @@
+name: prod_pipeline
+on:
+  push:
+    paths: "*"
+  schedule:
+  - cron: 0-29/10 * * * *
+env:
+  DISABLE_AUTH: 'true'
+  DB_ENGINE: sqlite
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3.4.0
+    - name: echo message
+      run: echo "Database engine is ${{ env.DB_ENGINE }}"
+#     # This item has no matching transformer
+#     - sleep:
+#       - key: time
+#         value:
+#           isLiteral: true
+#           value: 10
+    - name: echo message
+      run: echo "DISABLE_AUTH is ${{ env.DISABLE_AUTH }}"
+  write_results:
+    name: write-results
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3.4.0
+#     # This item has no matching transformer
+#     - writeFile:
+#       - key: file
+#         value:
+#           isLiteral: true
+#           value: results.out
+#       - key: text
+#         value:
+#           isLiteral: true
+#           value: These are the results.
