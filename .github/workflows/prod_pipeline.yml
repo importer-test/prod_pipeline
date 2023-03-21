@@ -1,0 +1,33 @@
+name: prod_pipeline
+on:
+  push:
+    paths: "*"
+  schedule:
+  - cron: 0-29/10 * * * *
+env:
+  DISABLE_AUTH: 'true'
+  DB_ENGINE: sqlite
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3.4.0
+    - name: echo message
+      run: echo "Database engine is ${{ env.DB_ENGINE }}"
+    - name: Sleep for 10 seconds
+      run: sleep 10s
+      shell: bash
+    - name: echo message
+      run: echo "DISABLE_AUTH is ${{ env.DISABLE_AUTH }}"
+  write_results:
+    name: write-results
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3.4.0
+    - uses: DamianReeves/write-file-action@v1.2
+      with:
+        path: "${{ env.home}}//results.out"
+        contents: These are the results.
